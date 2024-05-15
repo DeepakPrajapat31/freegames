@@ -89,7 +89,7 @@
         <input type="search" id="search" placeholder="Search Games Here">
         <button id="click" onclick="performSearch()">🔍</button>
     </div>
-    <div class="one" id="search-results"></div>
+    <div class="one" id="search-results"><p>No games found.</p></div>
     <div class="container">
         <div class="game-container">
             <a class="game-link" href="https://youtube.com/playables/UgkxhUUpYndtiTolpGZWJ_qkpwQePIEhurnK?si=gfIOMfkSmgrkjqTF">
@@ -189,7 +189,19 @@
             var searchQuery = document.getElementById('search').value.toLowerCase();
             var gameLinks = document.getElementsByClassName('game-link');
             var searchResults = document.getElementById('search-results');
-            searchResults.innerHTML = '';
+            searchResults.innerHTML = ''; // Clear previous search results
+
+            Array.from(gameLinks).forEach(function(link) {
+                var gameTitle = link.querySelector('.game-details h2').innerText.toLowerCase();
+                if (gameTitle.includes(searchQuery)) {
+                    searchResults.appendChild(link.cloneNode(true));
+                }
+            });
+
+            if (!searchResults.innerHTML) {
+                searchResults.innerHTML = '<p>No games found.</p>';
+            }
+        }
     </script>
 
 
