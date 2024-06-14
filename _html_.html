@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title -->
+    <title>Click Speed Test</title>
+    <!-- CSS styles -->
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-image: url('https://as2.ftcdn.net/v2/jpg/05/23/82/37/1000_F_523823772_rENIlsWUhzgdojXgODNZZd9WtiQokv72.jpg');
+            background-size: cover;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        /* Styling for the click box */
+        .box {
+            visibility: hidden;
+        }
+        /* Styling for text elements */
+        p[id="text"] {
+            color: #fff;
+        }
+        /* Styling for buttons */
+        button {
+            height: 50px;
+            width: 100px;
+            text-align: center;
+            border-radius: 5px;
+        }
+        /* Styling for span elements */
+        span {
+            font-size: 30px;
+            text-align: center;
+        }
+        /* Styling for paragraph elements */
+        p {
+            font-size: 30px;
+            text-align: center;
+        }
+        /* Styling for average click speed paragraph */
+        p[id="average"] {
+            visibility: hidden;
+        }
+        /* Styling for reset button */
+        button[id="reset"] {
+            border-radius: 5px;
+            width: 100px;
+            background-color: lightgrey;
+            border: 1px solid black;
+        }
+        /* Styling for feedback paragraph */
+        P[id="feedback"] {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            visibility: hidden;
+        }
+        .startbox {
+            text-align: center;
+        }
+        .resetbox {
+            text-align: center;
+            visibility: hidden;
+        }
+        .timerpos {
+            top: 25%;
+        }
+        .bigbox {
+            background-color: lightgrey;
+            border-radius: 15px;
+            opacity: 85%;
+        }
+        button:hover {
+            background-color: aquamarine;
+            border-radius: 5px;
+        }
+        p[id="lalach"] {
+            font-size: smaller;
+        }
+        span[id="lalach2"] {
+            font-size: smaller;
+        }
+        button[id="lalach2.0"] {
+            width: fit-content;
+            height: fit-content;
+            background-color: #fff;
+            border-radius: 6px;
+        }
+        button[id="lalach2.0"]:hover {
+            background-color: gray;
+            color: #fff;
+        }
+        a {
+            font-size: medium;
+            color: #000;
+        }
+        a:hover {
+            color: chartreuse;
+            background-color: #000;
+            border-radius: 4px;
+            padding: 5px;
+            transition: ease-in-out 0.5s;
+        }
+        p[id="lalach"] {
+            font-size: medium;
+            color: #000;
+            visibility: hidden;
+        }
+        p[id="lalach"]:hover {
+            color: chartreuse;
+            background-color: #000;
+            border-radius: 4px;
+            padding: 5px;
+            transition: ease-in-out 0.5s;
+        }
+        .form {
+            background-color: lightgrey;
+            border-radius: 15px;
+            opacity: 85%;
+        }
+        p[id="rank1"] {
+            font-size: large;
+            transition: ease-in 0.3s;
+        }
+        p[id="rank1"]:hover {
+            background-color: greenyellow;
+            cursor: pointer;
+        }
+        span[id="rank"] {
+            font-size: large;
+        }
+        p[id="rank2"] {
+            font-size: large;
+            transition: ease-in 0.3s;
+        }
+        p[id="rank2"]:hover {
+            background-color: yellow;
+            cursor: pointer;
+        }
+        p[id="rank3"] {
+            font-size: large;
+            transition: ease-in 0.3s;
+        }
+        p[id="rank3"]:hover {
+            background-color: red;
+            cursor: pointer;
+        }
+        span[id="score1"] {
+            font-size: large;
+        }
+        span[id="score2"] {
+            font-size: large;
+        }
+        span[id="score3"] {
+            font-size: large;
+        }
+    </style>
+</head>
+<body>
+    <div class="form">
+        <pre><h1> LeaderBoard </h1></pre>
+        <pre><p id="rank1"><span id="rank">1. </span><span id="name1">Player</span> <span id="score1">0</span></p></pre>
+        <pre><p id="rank2"><span id="rank">2. </span><span id="name2">Player</span> <span id="score2">0</span></p></pre>
+        <pre><p id="rank3"><span id="rank">3. </span><span id="name3">Player</span> <span id="score3">0</span></p></pre>
+    </div>&nbsp;&nbsp;
+    <div class="bigbox">
+        <div class="timerpos">
+            <!-- Timer display -->
+            <b><p>Timer : <span id="timer">10</span></p></b>
+        </div>
+        <!-- Score display -->
+        <b><p>Score : <span id="count">0</span></p></b>
+        <div class="startbox">
+            <!-- Start button -->
+            <button id="start" onclick="startbutton()">Start</button>
+            <!-- Click box -->
+            <div class="box">
+                <button id="click" onclick="incrementCount()">Click</button>
+            </div>
+        </div>
+        <div class="resetbox">
+            <!-- Reset button -->
+            <button id="reset" onclick="resetTimer()">Reset</button>
+        </div>
+        <p id="lalach">Increase Time To <a href="#"><span id="lalach2">+10 secs</span></a></p>
+        <!-- Feedback message -->
+        <b><p id="feedback">Times Up!</p></b>
+        <!-- Average click speed display -->
+        <p id="average"><b>Average Click Speed : <span id="averageValue">0</span></b></p>
+    </div>
+    <!-- JavaScript code -->
+    <script>
+        var count = 0;
+        var timer = 10;
+        var interval;
+        var scores = JSON.parse(localStorage.getItem('leaderboard')) || [{name: "Player", score: 0}, {name: "Player", score: 0}, {name: "Player", score: 0}];
+
+        // Function to increment count
+        function incrementCount() {
+            count++;
+            document.getElementById('count').innerText = count;
+        }
+
+        // Function to decrement timer
+        function decrementTimer() {
+            if (timer > 0) {
+                timer--;
+                document.getElementById('timer').innerText = timer;
+            }
+            if (timer === 0) {
+                clearInterval(interval);
+                document.getElementById('click').style.visibility = 'hidden';
+                var average = count / 10;
+                document.getElementById('average').style.visibility = 'visible';
+                document.getElementById('averageValue').innerText = average;
+                document.getElementById('feedback').style.visibility = 'visible';
+                document.getElementById('reset').style.visibility = 'visible';
+                updateLeaderboard(count);
+            }
+        }
+
+        // Function to start the test
+        function startbutton() {
+            count = 0;
+            timer = 10;
+            document.getElementById('count').innerText = count;
+            document.getElementById('timer').innerText = timer;
+            document.getElementById('click').style.visibility = 'visible';
+            document.getElementById('average').style.visibility = 'hidden';
+            document.getElementById('feedback').style.visibility = 'hidden';
+            document.getElementById('reset').style.visibility = 'hidden';
+            document.getElementById('start').style.visibility = 'hidden';
+            interval = setInterval(decrementTimer, 1000);
+        }
+
+        // Function to reset the timer and count
+        function resetTimer() {
+            clearInterval(interval);
+            count = 0;
+            timer = 10;
+            document.getElementById('count').innerText = count;
+            document.getElementById('timer').innerText = timer;
+            document.getElementById('click').style.visibility = 'visible';
+            document.getElementById('average').style.visibility = 'hidden';
+            document.getElementById('feedback').style.visibility = 'hidden';
+            document.getElementById('reset').style.visibility = 'hidden';
+            interval = setInterval(decrementTimer, 1000);
+        }
+
+        // Function to update the leaderboard
+        function updateLeaderboard(score) {
+            var name = prompt("Enter your name:");
+            if (!name) {
+                name = "Player";
+            }
+
+            scores.push({name: name, score: score});
+            scores.sort(function(a, b) {
+                return b.score - a.score;
+            });
+            scores = scores.slice(0, 3);
+
+            localStorage.setItem('leaderboard', JSON.stringify(scores));
+
+            document.getElementById('name1').innerText = scores[0].name;
+            document.getElementById('score1').innerText = scores[0].score;
+            document.getElementById('name2').innerText = scores[1].name;
+            document.getElementById('score2').innerText = scores[1].score;
+            document.getElementById('name3').innerText = scores[2].name;
+            document.getElementById('score3').innerText = scores[2].score;
+        }
+
+        // Load leaderboard from localStorage on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            if (localStorage.getItem('leaderboard')) {
+                var savedScores = JSON.parse(localStorage.getItem('leaderboard'));
+                document.getElementById('name1').innerText = savedScores[0].name;
+                document.getElementById('score1').innerText = savedScores[0].score;
+                document.getElementById('name2').innerText = savedScores[1].name;
+                document.getElementById('score2').innerText = savedScores[1].score;
+                document.getElementById('name3').innerText = savedScores[2].name;
+                document.getElementById('score3').innerText = savedScores[2].score;
+            }
+        });
+    </script>
+</body>
+</html>
